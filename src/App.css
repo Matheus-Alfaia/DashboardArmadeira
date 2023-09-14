@@ -1,38 +1,126 @@
-.App {
-  text-align: center;
+
+body {
+  background-color: #f8eec9;
+  font-family: Arial, sans-serif;
+}
+table {
+  width: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+th, td {
+  text-align: left;
+  padding: 8px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+th {
+  background-color: #4CAF50;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+nav {
+  background-color: #c3793c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+nav h1 {
+  color: #fff;
+  font-size: 28px;
+  margin: 0;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  margin-right: 10px;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+nav a:hover {
+  background-color: #fff;
+  color: #7634c1;
+}
+
+nav .active {
+  background-color: #fff;
+  color: #333;
+}
+.chart-container {
+  border: 1px solid #;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-toggle { outline: 0; }
+
+.btn-toggle {
+  padding: .25rem .5rem;
+  font-weight: 600;
+  color: var(--bs-emphasis-color);
+  background-color: transparent;
+}
+.btn-toggle:hover,
+.btn-toggle:focus {
+  color: rgba(var(--bs-emphasis-color-rgb), .85);
+  background-color: var(--bs-tertiary-bg);
+}
+
+.btn-toggle::before {
+  width: 1.25em;
+  line-height: 0;
+  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+  transition: transform .35s ease;
+  transform-origin: .5em 50%;
+}
+
+[data-bs-theme="dark"] .btn-toggle::before {
+  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%28255,255,255,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+}
+
+.btn-toggle[aria-expanded="true"] {
+  color: rgba(var(--bs-emphasis-color-rgb), .85);
+}
+.btn-toggle[aria-expanded="true"]::before {
+  transform: rotate(90deg);
+}
+
+.btn-toggle-nav a {
+  padding: .1875rem .5rem;
+  margin-top: .125rem;
+  margin-left: 1.25rem;
+}
+.btn-toggle-nav a:hover,
+.btn-toggle-nav a:focus {
+  background-color: var(--bs-tertiary-bg);
+}
+
+.scrollarea {
+  overflow-y: auto;
+}
+.chipOperator{
+    background-color:"blue";
+}
+.flex-shrink-0 p-3{
+background-color:#dc143c;
+}
+.backbody{
+background-color:#f4e1cd;
 }
