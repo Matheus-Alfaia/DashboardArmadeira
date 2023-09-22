@@ -43,22 +43,29 @@ const Batery = () => {
     const query6 = ref.orderByChild('downlinkFrequency').limitToLast(100)
 
 
+    function convertToHour(dateTime) {
+      const date = new Date(dateTime);
+      const hours = date.getHours().toString().padStart(2, '0'); // Garante que sempre tenha 2 dígitos
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      const seconds = date.getSeconds().toString().padStart(2, '0');
+      return `${hours}:${minutes}:${seconds}`;
+    }
 
     query.on('value', (snapshot) => {
       const data = snapshot.val();
-      const dataArray = Object.entries(data).map(([key, value]) => [value.time, value.batteryCurrent]);
+      const dataArray = Object.entries(data).map(([key, value]) => [convertToHour(value.currentDateTime), value.batteryCurrent]);
       console.log(dataArray);
         setData(dataArray);
     });
     query2.on('value', (snapshot) => {
       const data2 = snapshot.val();
-      const dataArray2 = Object.entries(data2).map(([key, value]) => [value.time, value.batteryTemperature]);
+      const dataArray2 = Object.entries(data2).map(([key, value]) => [convertToHour(value.currentDateTime), value.batteryTemperature]);
       //console.log(dataArray2);
       setData2(dataArray2.reverse());
     });
     query3.on('value', (snapshot) => {
       const data3 = snapshot.val();
-      const dataArray3 = Object.entries(data3).map(([key, value]) => [value.time, value.internalFreeMemory]);
+      const dataArray3 = Object.entries(data3).map(([key, value]) => [convertToHour(value.currentDateTime), value.internalFreeMemory]);
      // console.log(dataArray3);
       setData3(dataArray3.reverse());
     });
@@ -66,21 +73,10 @@ const Batery = () => {
       const data4 = snapshot.val();
       const dataArray4 = Object.entries(data4).map(([key, value]) => ['Max Used RX', value.maxSupportedRxLinkSpeed]);
       const chartArray4 = [['MaxSupportedRXLinkSpeed', 'Value'], ...dataArray4];
-      console.log(chartArray4);
+      //console.log(chartArray4);
       setData4(chartArray4);
     });
-     query5.on('value', (snapshot) => {
-      const data5 = snapshot.val();
-      const dataArray5 = Object.entries(data5).map(([key, value]) => [value.time, value.uplinkFrequency]);
-      //console.log(dataArray2);
-      setData5(dataArray5.reverse());
-        });
-    query6.on('value', (snapshot) => {
-      const data6 = snapshot.val();
-      const dataArray6 = Object.entries(data6).map(([key, value]) => [value.time, value.downlinkFrequency]);
-     // console.log(dataArray3);
-      setData6(dataArray6.reverse());
-    });
+
     if (!queryOnAdded) {
           setQueryOnAdded(true);
     }
@@ -89,8 +85,8 @@ const Batery = () => {
 const handleBrushChange = (data) => {
       if (data && data.length > 0) {
         const { startIndex, endIndex } = data[0];
-        const startDate = data[startIndex].time;
-        const endDate = data[endIndex].time;
+        const startDate = data[startIndex].currentDateTimetime;
+        const endDate = data[endIndex].currentDateTimetime;
         setSelectedRange([startDate, endDate]);
       } else {
         setSelectedRange([null, null]);
@@ -98,17 +94,23 @@ const handleBrushChange = (data) => {
     };
 
     const filteredData1 = selectedRange[0] && selectedRange[1]
-      ? data.filter((entry) => entry.time >= selectedRange[0] && entry.time <= selectedRange[1])
+      ? data.filter((entry) => entry.time >= selectedRange[0] && entry.currentDateTime <= selectedRange[1])
       : data;
 
     const filteredData2 = selectedRange[0] && selectedRange[1]
-      ? data2.filter((entry) => entry.time >= selectedRange[0] && entry.time <= selectedRange[1])
+      ? data2.filter((entry) => entry.time >= selectedRange[0] && entry.currentDateTime <= selectedRange[1])
       : data2;
 
     function timeToSeconds(time) {
       const [hours, minutes, seconds] = time.split(':').map(Number);
       return hours * 3600 + minutes * 60 + seconds;
     }
+
+    const [filter, setFilter] = useState("");
+    const filteredData = data.filter(([currentDateTime]) =>
+        currentDateTime.includes(filter)
+      );
+
   return (
 
 
@@ -175,8 +177,8 @@ const handleBrushChange = (data) => {
             chartType="AreaChart"
             data={[
               ['Time', 'BatteryCurrent', 'Battery Temperature'],
-              ...data.map(([time, batteryCurrent], index) =>[
-                timeToSeconds(time), batteryCurrent/10, data2[index][1],
+              ...data.map(([currentDateTime, batteryCurrent], index) =>[
+               currentDateTime, batteryCurrent, data2[index][1],
               ]),
             ]}
             options={{
@@ -205,46 +207,44 @@ const handleBrushChange = (data) => {
             width="100%"
             height="340px"
             style={{ marginTop: '5px' }}
-            controls={[
-                       {
-                         controlType: "ChartRangeFilter",
-                         options: {
-                           filterColumnIndex: 0,
-                           ui: {
-                             chartType: "LineChart",
-                             chartOptions: {
-                               chartArea: { width: "98%", height: "50%" },
-                               hAxis: { baselineColor: "none" },
-                             },
-                                     label: "Time Search filter:",
-                           },
-                         },
-                         controlPosition: "bottom",
-                         controlWrapperParams: {
-                           state: {
-                             range: {
-                                start: filteredData1[0]?.time || null,
-                                end: filteredData1[filteredData1.length - 1]?.time || null,
-                             },
-                           },
-                         },
-                          controlProps: {
-                               className: "label-search", // Adicione a classe CSS personalizada aqui
-                             },
-                       },
-                     ]}
+           controls={[
+             {
+               controlType: "StringFilterControl",
+               options: {
+                 filterColumnIndex: 0, // Índice da coluna que contém as strings de tempo
+                 ui: {
+                   chartType: "AreaChart",
+                   chartOptions: {
+                     chartArea: { width: "98%", height: "50%" },
+                     hAxis: { baselineColor: "none" },
+                   },
+                 },
+               },
+               controlPosition: "bottom",
+               controlProps: {
+                 className: "label-search", // Adicione a classe CSS personalizada aqui
+               },
+             },
+           ]}
           />
           <br></br>
         </div>
     </div>
     <div style={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
         <div className="chart-container">
+        <input
+                type="text"
+                placeholder="Filter by Time"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+              />
                               <Chart
+
                                 chartType="AreaChart"
                                 data={[
                                   ['Time', 'BatteryCurrent', 'Battery Temperature'],
-                                  ...data.map(([time, batteryCurrent], index) =>[
-                                    timeToSeconds(time),batteryCurrent/10, data2[index][1],
+                                  ...data.map(([currentDateTime, batteryCurrent], index) =>[
+                                    currentDateTime,batteryCurrent/10, data2[index][1],
                                   ]),
                                 ]}
                                 options={{
@@ -272,13 +272,13 @@ const handleBrushChange = (data) => {
                                 width="100%"
                                 height="350px"
                                 style={{ marginTop: '20px'}}
-                                chartPackages={["corechart", "controls"]}
+                                chartPackages={["corechart"]}
                                 width="100%"
                                 height="340px"
                                 style={{ marginTop: '5px' }}
                                 controls={[
                                            {
-                                             controlType: "ChartRangeFilter",
+                                             controlType: "StringFilterControl",
                                              options: {
                                                filterColumnIndex: 0,
                                                ui: {
@@ -291,14 +291,7 @@ const handleBrushChange = (data) => {
                                                },
                                              },
                                              controlPosition: "bottom",
-                                             controlWrapperParams: {
-                                               state: {
-                                                 range: {
-                                                    start: filteredData1[0]?.time || null,
-                                                    end: filteredData1[filteredData1.length - 1]?.time || null,
-                                                 },
-                                               },
-                                             },
+
                                               controlProps: {
                                                    className: "label-search", // Adicione a classe CSS personalizada aqui
                                                  },
