@@ -272,7 +272,7 @@ const handleBrushChange = (data) => {
                                 width="100%"
                                 height="350px"
                                 style={{ marginTop: '20px'}}
-                                chartPackages={["corechart", "controls"]}
+                                chartPackages={["corechart"]}
                                 width="100%"
                                 height="340px"
                                 style={{ marginTop: '5px' }}

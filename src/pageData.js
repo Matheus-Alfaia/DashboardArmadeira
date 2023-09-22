@@ -136,7 +136,7 @@ query10.on('value', (snapshot) => {
           .map(([time, tx], index) => [
             time,
             tx / 1000,
-            (data2[index] && data2[index][1] ? data2[index][1] / 10 : 0),
+            (data2[index] && data2[index][1] ? data2[index][1] / 1000 : 0),
             (data6[index] && data6[index][1] ? data6[index][1] : 0),
           ]),
       ];

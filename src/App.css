@@ -1,6 +1,6 @@
 
 body {
-  background-color: #DE9621;
+  background-color: #f2c375;
   font-family: Arial, sans-serif;
 }
 table {
@@ -21,7 +21,7 @@ tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 nav {
-  background-color: #c3793c;
+  background-color: #ab741a;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -122,5 +122,5 @@ nav .active {
 background-color:#dc143c;
 }
 .backbody{
-background-color:#f4e1cd;
+background-color:#f4ddc6;
 }
